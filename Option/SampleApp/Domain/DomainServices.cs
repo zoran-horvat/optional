@@ -47,15 +47,13 @@ namespace CodingHelmet.SampleApp.Domain
             new RegisteredUser(userName);
 
         public bool VerifyCredentials(string userName) =>
-            this.UserRepository.TryFind(userName).AsEnumerable().Any();
+            this.UserRepository.TryFind(userName).Map(_ => true).Collapse(() => false);
 
         public IPurchaseViewModel Purchase(string userName, string itemName) =>
             this.UserRepository
                 .TryFind(userName)
                 .Map(user => this.Purchase(user, this.FindAccount(user), itemName))
-                .AsEnumerable()
-                .DefaultIfEmpty(FailedPurchase.Instance)
-                .Single();
+                .Collapse(() => FailedPurchase.Instance);
 
         private IAccount FindAccount(RegisteredUser user) =>
             this.AccountRepository.FindByUser(user);
@@ -68,17 +66,13 @@ namespace CodingHelmet.SampleApp.Domain
                 .TryFind(itemName)
                 .Map(user.Purchase)
                 .Map(receipt => this.Charge(user, account, receipt))
-                .AsEnumerable()
-                .DefaultIfEmpty(new MissingProduct(itemName))
-                .Single();
+                .Collapse(() => new MissingProduct(itemName));
 
         private IPurchaseViewModel Charge(IUser user, IAccount account, IReceipt receipt) =>
             account
                 .TryWithdraw(receipt.Price)
                 .Map(trans => (IPurchaseViewModel)receipt)
-                .AsEnumerable()
-                .DefaultIfEmpty(new InsufficientFunds(user.DisplayName, receipt.Price))
-                .Single();
+                .Collapse(() => new InsufficientFunds(user.DisplayName, receipt.Price));
 
         public void Deposit(string userName, decimal amount) =>
             this.UserRepository

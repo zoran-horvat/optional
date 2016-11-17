@@ -7,6 +7,8 @@ namespace OptionTests
     {
         protected override int SampleValue => 5;
 
+        protected override int AlternateSampleValue => 3;
+
         protected override string SampleMapToValue => "something";
 
         protected override IOption<int> CreateSome(int obj) => Option.Some(obj);

@@ -4,7 +4,12 @@ namespace OptionTests
 {
     public class OptionOfObjectTests: OptionInterfaceTests<object, string>
     {
-        protected override object SampleValue => new object();
+        private static object SampleObject = new object();
+        private static object AlternateObject = new object();
+
+        protected override object SampleValue => SampleObject;
+
+        protected override object AlternateSampleValue => AlternateObject;
 
         protected override string SampleMapToValue => "something";
 

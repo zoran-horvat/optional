@@ -122,7 +122,28 @@ namespace OptionTests
             Assert.False(mappingInvoked);
         }
 
+        [Fact]
+        public void Collapse_SomeContainingValue_ReturnsContainedValue()
+        {
+            T expectedValue = this.SampleValue;
+            IOption<T> option = this.CreateSome(expectedValue);
+            T actualValue = option.Collapse(() => this.AlternateSampleValue);
+
+            Assert.True(this.AreSame(expectedValue, actualValue));
+        }
+
+        [Fact]
+        public void Collapse_NoneReceivesMethodWhichReturnsAlternateValue_ReturnsThatValue()
+        {
+            T expectedValue = this.AlternateSampleValue;
+            IOption<T> option = this.CreateNone();
+            T actualValue = option.Collapse(() => expectedValue);
+
+            Assert.True(this.AreSame(expectedValue, actualValue));
+        }
+
         protected abstract T SampleValue { get; }
+        protected abstract T AlternateSampleValue { get; }
         protected abstract TMap SampleMapToValue { get; }
 
         protected abstract IOption<T> CreateSome(T obj);
