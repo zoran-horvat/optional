@@ -47,11 +47,11 @@ namespace CodingHelmet.SampleApp.Domain
             new RegisteredUser(userName);
 
         public bool VerifyCredentials(string userName) =>
-            this.UserRepository.TryFind(userName).Any();
+            this.UserRepository.TryFind(userName).AsEnumerable().Any();
 
         public IPurchaseViewModel Purchase(string userName, string itemName) =>
             this.UserRepository
-                .TryFind(userName)
+                .TryFind(userName).AsEnumerable()
                 .Select(user => this.Purchase(user, this.FindAccount(user), itemName))
                 .DefaultIfEmpty(FailedPurchase.Instance)
                 .Single();
@@ -64,7 +64,7 @@ namespace CodingHelmet.SampleApp.Domain
 
         private IPurchaseViewModel Purchase(IUser user, IAccount account, string itemName) =>
             this.ProductRepository
-                .TryFind(itemName)
+                .TryFind(itemName).AsEnumerable()
                 .Select(item => user.Purchase(item))
                 .Select(receipt => this.Charge(user, account, receipt))
                 .DefaultIfEmpty(new MissingProduct(itemName))
@@ -72,14 +72,14 @@ namespace CodingHelmet.SampleApp.Domain
 
         private IPurchaseViewModel Charge(IUser user, IAccount account, IReceipt receipt) =>
             account
-                .TryWithdraw(receipt.Price)
+                .TryWithdraw(receipt.Price).AsEnumerable()
                 .Select(trans => (IPurchaseViewModel)receipt)
                 .DefaultIfEmpty(new InsufficientFunds(user.DisplayName, receipt.Price))
                 .Single();
 
         public void Deposit(string userName, decimal amount) =>
             this.UserRepository
-                .TryFind(userName)
+                .TryFind(userName).AsEnumerable()
                 .Select(user => this.FindAccount(user))
                 .AsOption()
                 .Do(account => account.Deposit(amount));

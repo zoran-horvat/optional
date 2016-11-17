@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CodingHelmet.Optional;
 
 namespace CodingHelmet.SampleApp.Common
 {

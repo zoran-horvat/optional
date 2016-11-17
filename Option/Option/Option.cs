@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CodingHelmet.Option
+namespace CodingHelmet.Optional
 {
     public static class Option
     {

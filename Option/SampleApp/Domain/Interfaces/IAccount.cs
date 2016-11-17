@@ -1,4 +1,4 @@
-﻿using CodingHelmet.SampleApp.Common;
+﻿using CodingHelmet.Optional;
 
 namespace CodingHelmet.SampleApp.Domain.Interfaces
 {

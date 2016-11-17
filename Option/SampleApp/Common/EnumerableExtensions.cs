@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CodingHelmet.Optional;
 
 namespace CodingHelmet.SampleApp.Common
 {

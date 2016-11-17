@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using CodingHelmet.Option;
+using CodingHelmet.Optional;
 using Xunit;
 
 namespace OptionTests

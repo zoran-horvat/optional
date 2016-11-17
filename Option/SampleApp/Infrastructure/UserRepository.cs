@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CodingHelmet.Optional;
 using CodingHelmet.SampleApp.Common;
 using CodingHelmet.SampleApp.Domain.Models;
 
