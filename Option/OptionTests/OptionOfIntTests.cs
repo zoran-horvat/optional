@@ -1,10 +1,13 @@
-﻿using CodingHelmet.Optional;
+﻿using System;
+using CodingHelmet.Optional;
 
 namespace OptionTests
 {
-    public class OptionOfIntTests: OptionInterfaceTests<int>
+    public class OptionOfIntTests: OptionInterfaceTests<int, string>
     {
         protected override int SampleValue => 5;
+
+        protected override string SampleMapToValue => "something";
 
         protected override IOption<int> CreateSome(int obj) => Option.Some(obj);
 

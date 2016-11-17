@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CodingHelmet.Optional
 {
@@ -20,6 +21,12 @@ namespace CodingHelmet.Optional
             }
 
             public void Do(Action<T> callback) => Array.ForEach(this.Data, callback);
+
+            public IOption<TResult> Map<TResult>(Func<T, TResult> mapping) =>
+                this.Data
+                    .Select(x => new OptionImpl<TResult>(mapping(x)))
+                    .DefaultIfEmpty(new OptionImpl<TResult>())
+                    .Single();
 
             public IEnumerable<T> AsEnumerable() => this.Data;
         }

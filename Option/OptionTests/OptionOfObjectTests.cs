@@ -2,9 +2,11 @@
 
 namespace OptionTests
 {
-    public class OptionOfObjectTests: OptionInterfaceTests<object>
+    public class OptionOfObjectTests: OptionInterfaceTests<object, string>
     {
         protected override object SampleValue => new object();
+
+        protected override string SampleMapToValue => "something";
 
         protected override IOption<object> CreateSome(object obj) => Option.Some(obj);
 

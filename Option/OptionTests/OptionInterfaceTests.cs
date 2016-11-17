@@ -5,7 +5,7 @@ using Xunit;
 
 namespace OptionTests
 {
-    public abstract class OptionInterfaceTests<T>
+    public abstract class OptionInterfaceTests<T, TMap>
     {
         [Fact]
         public void Do_SomeReceivesAction_ActionIsInvoked()
@@ -75,7 +75,55 @@ namespace OptionTests
             Assert.True(this.CreateSome(value).AsEnumerable().Any(x => this.AreSame(value, x)));
         }
 
+        [Fact]
+        public void Map_SomeReceivesMappingToObject_ReturnsSomeOfThatObject()
+        {
+            TMap mappedValue = this.SampleMapToValue;
+
+            IOption<T> option = this.CreateSome(this.SampleValue);
+            IOption<TMap> mapped = option.Map(_ => mappedValue);
+
+            Assert.Same(mappedValue, mapped.AsEnumerable().ElementAt(0));
+        }
+
+        [Fact]
+        public void Map_NoneReceivesMappingToObject_ReturnsNone()
+        {
+            IOption<T> option = this.CreateNone();
+            IOption<TMap> mapped = option.Map(_ => this.SampleMapToValue);
+
+            Assert.Equal(0, mapped.AsEnumerable().Count());
+        }
+
+        [Fact]
+        public void Map_SomeReceivesMappingFunction_PassesContainedValueToMappingFunction()
+        {
+            T expectedValue = this.SampleValue;
+            T actualValue = default(T);
+
+            IOption<T> option = this.CreateSome(expectedValue);
+            IOption<T> mapped = option.Map(x => actualValue = x);
+
+            Assert.True(this.AreSame(expectedValue, actualValue));
+        }
+
+        [Fact]
+        public void Map_NoneReceivesMappingFunction_MappingFunctionNotCalled()
+        {
+            bool mappingInvoked = false;
+
+            IOption<T> option = this.CreateNone();
+            IOption<TMap> mapped = option.Map(_ =>
+            {
+                mappingInvoked = true;
+                return default(TMap);
+            });
+
+            Assert.False(mappingInvoked);
+        }
+
         protected abstract T SampleValue { get; }
+        protected abstract TMap SampleMapToValue { get; }
 
         protected abstract IOption<T> CreateSome(T obj);
         protected abstract IOption<T> CreateNone();

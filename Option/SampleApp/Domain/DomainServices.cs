@@ -51,8 +51,9 @@ namespace CodingHelmet.SampleApp.Domain
 
         public IPurchaseViewModel Purchase(string userName, string itemName) =>
             this.UserRepository
-                .TryFind(userName).AsEnumerable()
-                .Select(user => this.Purchase(user, this.FindAccount(user), itemName))
+                .TryFind(userName)
+                .Map(user => this.Purchase(user, this.FindAccount(user), itemName))
+                .AsEnumerable()
                 .DefaultIfEmpty(FailedPurchase.Instance)
                 .Single();
 
@@ -64,24 +65,25 @@ namespace CodingHelmet.SampleApp.Domain
 
         private IPurchaseViewModel Purchase(IUser user, IAccount account, string itemName) =>
             this.ProductRepository
-                .TryFind(itemName).AsEnumerable()
-                .Select(item => user.Purchase(item))
-                .Select(receipt => this.Charge(user, account, receipt))
+                .TryFind(itemName)
+                .Map(user.Purchase)
+                .Map(receipt => this.Charge(user, account, receipt))
+                .AsEnumerable()
                 .DefaultIfEmpty(new MissingProduct(itemName))
                 .Single();
 
         private IPurchaseViewModel Charge(IUser user, IAccount account, IReceipt receipt) =>
             account
-                .TryWithdraw(receipt.Price).AsEnumerable()
-                .Select(trans => (IPurchaseViewModel)receipt)
+                .TryWithdraw(receipt.Price)
+                .Map(trans => (IPurchaseViewModel)receipt)
+                .AsEnumerable()
                 .DefaultIfEmpty(new InsufficientFunds(user.DisplayName, receipt.Price))
                 .Single();
 
         public void Deposit(string userName, decimal amount) =>
             this.UserRepository
-                .TryFind(userName).AsEnumerable()
-                .Select(user => this.FindAccount(user))
-                .AsOption()
+                .TryFind(userName)
+                .Map(this.FindAccount)
                 .Do(account => account.Deposit(amount));
     }
 }
