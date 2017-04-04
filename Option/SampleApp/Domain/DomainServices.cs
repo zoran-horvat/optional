@@ -47,13 +47,13 @@ namespace CodingHelmet.SampleApp.Domain
             new RegisteredUser(userName);
 
         public bool VerifyCredentials(string userName) =>
-            this.UserRepository.TryFind(userName).Map(_ => true).Collapse(() => false);
+            this.UserRepository.TryFind(userName).Map(_ => true).Fold(() => false);
 
         public IPurchaseViewModel Purchase(string userName, string itemName) =>
             this.UserRepository
                 .TryFind(userName)
                 .Map(user => this.Purchase(user, this.FindAccount(user), itemName))
-                .Collapse(() => FailedPurchase.Instance);
+                .Fold(FailedPurchase.Instance);
 
         private IAccount FindAccount(RegisteredUser user) =>
             this.AccountRepository.FindByUser(user);
@@ -66,13 +66,13 @@ namespace CodingHelmet.SampleApp.Domain
                 .TryFind(itemName)
                 .Map(user.Purchase)
                 .Map(receipt => this.Charge(user, account, receipt))
-                .Collapse(() => new MissingProduct(itemName));
+                .Fold(() => new MissingProduct(itemName));
 
         private IPurchaseViewModel Charge(IUser user, IAccount account, IReceipt receipt) =>
             account
                 .TryWithdraw(receipt.Price)
                 .Map(trans => (IPurchaseViewModel)receipt)
-                .Collapse(() => new InsufficientFunds(user.DisplayName, receipt.Price));
+                .Fold(() => new InsufficientFunds(user.DisplayName, receipt.Price));
 
         public void Deposit(string userName, decimal amount) =>
             this.UserRepository

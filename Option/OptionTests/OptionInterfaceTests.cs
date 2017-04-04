@@ -127,7 +127,7 @@ namespace OptionTests
         {
             T expectedValue = this.SampleValue;
             IOption<T> option = this.CreateSome(expectedValue);
-            T actualValue = option.Collapse(() => this.AlternateSampleValue);
+            T actualValue = option.Fold(() => this.AlternateSampleValue);
 
             Assert.True(this.AreSame(expectedValue, actualValue));
         }
@@ -137,7 +137,7 @@ namespace OptionTests
         {
             T expectedValue = this.AlternateSampleValue;
             IOption<T> option = this.CreateNone();
-            T actualValue = option.Collapse(() => expectedValue);
+            T actualValue = option.Fold(() => expectedValue);
 
             Assert.True(this.AreSame(expectedValue, actualValue));
         }

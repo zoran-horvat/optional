@@ -28,11 +28,18 @@ namespace CodingHelmet.Optional
                     .DefaultIfEmpty(new OptionImpl<TResult>())
                     .Single();
 
-            public T Collapse(Func<T> whenNone)
+            public T Fold(Func<T> whenNone)
             {
                 foreach (T value in this.Data)
                     return value;
                 return whenNone();
+            }
+
+            public T Fold(T whenNone)
+            {
+                foreach (T value in this.Data)
+                    return value;
+                return whenNone;
             }
 
             public IEnumerable<T> AsEnumerable() => this.Data;
