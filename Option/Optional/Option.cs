@@ -11,6 +11,7 @@ namespace CodingHelmet.Optional
             new None<T>();
 
         public abstract Option<TResult> Map<TResult>(Func<T, TResult> map);
+        public abstract Option<TResult> MapOptional<TResult>(Func<T, Option<TResult>> map);
         public abstract T Reduce(T whenNone);
         public abstract T Reduce(Func<T> whenNone);
 

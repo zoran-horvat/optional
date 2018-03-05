@@ -12,6 +12,7 @@ namespace Demo
         static void Main(string[] args)
         {
             ImplicitOperatorsDemo();
+            MappingDemo();
             ObjectNoneIfNullDemo();
             ObjectWhenDemo();
             OptionOfTypeDemo();
@@ -33,6 +34,29 @@ namespace Demo
 
             Console.WriteLine(converted);
             Console.WriteLine(extracted);
+        }
+
+        private static void MappingDemo()
+        {
+            Console.WriteLine("\n*** Mapping demo:");
+
+            Person child = new Person("Jill", 12, Color.Red);
+            Person grownUp = new Person("Joe", 46, Color.Blue);
+
+            Option<Car> none = child.TryGetCar();  // None
+            Option<Car> some = grownUp.TryGetCar();
+
+            Console.WriteLine($"{none}, {some}");
+
+            Option<Person> noPerson = None.Value;
+            Option<Person> someChild = child;
+            Option<Person> someGrownUp = grownUp;
+
+            Option<Car> noCar = noPerson.MapOptional(person => person.TryGetCar());
+            Option<Car> noChildCar = someChild.MapOptional(person => person.TryGetCar());
+            Option<Car> someGrownUpCar = someGrownUp.MapOptional(person => person.TryGetCar());
+
+            Console.WriteLine($"{noCar}, {noChildCar}, {someGrownUpCar}");
         }
 
         private static void ObjectNoneIfNullDemo()

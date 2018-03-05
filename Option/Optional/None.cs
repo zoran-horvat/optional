@@ -7,6 +7,9 @@ namespace CodingHelmet.Optional
         public override Option<TResult> Map<TResult>(Func<T, TResult> map) =>
             None.Value;
 
+        public override Option<TResult> MapOptional<TResult>(Func<T, Option<TResult>> map) =>
+            None.Value;
+
         public override T Reduce(T whenNone) =>
             whenNone;
 
