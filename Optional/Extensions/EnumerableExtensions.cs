@@ -8,7 +8,7 @@ namespace CodingHelmet.Optional.Extensions
     {
         public static Option<T> FirstOrNone<T>(this IEnumerable<T> sequence) =>
             sequence.Select(x => (Option<T>)new Some<T>(x))
-                .DefaultIfEmpty(None.Value)
+                .DefaultIfEmpty(new None<T>())
                 .First();
 
         public static Option<T> FirstOrNone<T>(

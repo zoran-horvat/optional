@@ -16,6 +16,8 @@ namespace CodingHelmet.Optional
         public override T Reduce(Func<T> whenNone) =>
             whenNone();
 
+        public override Option<TNew> OfType<TNew>() => new None<TNew>();
+
         public override bool Equals(object obj) =>
             !(obj is null) && ((obj is None<T>) || (obj is None));
 

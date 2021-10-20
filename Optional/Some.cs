@@ -30,6 +30,10 @@ namespace CodingHelmet.Optional
         public override T Reduce(Func<T> whenNone) =>
             this.Content;
 
+        public override Option<TNew> OfType<TNew>() => 
+            typeof(T).IsAssignableFrom(typeof(TNew)) ? new Some<TNew>(this.Content as TNew)
+            : (Option<TNew>)new None<TNew>();
+
         public override string ToString() =>
             $"Some({this.ContentToString})";
 

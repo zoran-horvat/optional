@@ -15,9 +15,6 @@ namespace CodingHelmet.Optional
         public abstract T Reduce(T whenNone);
         public abstract T Reduce(Func<T> whenNone);
 
-        public Option<TNew> OfType<TNew>() where TNew : class =>
-            this is Some<T> some && typeof(TNew).IsAssignableFrom(typeof(T))
-                ? (Option<TNew>)new Some<TNew>(some.Content as TNew)
-                : None.Value;
+        public abstract Option<TNew> OfType<TNew>() where TNew : class;
     }
 }

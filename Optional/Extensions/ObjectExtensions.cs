@@ -5,7 +5,8 @@ namespace CodingHelmet.Optional.Extensions
     public static class ObjectExtensions
     {
         public static Option<T> When<T>(this T obj, bool condition) =>
-            condition ? (Option<T>)new Some<T>(obj) : None.Value;
+            condition ? new Some<T>(obj)
+            : (Option<T>)new None<T>();
 
         public static Option<T> When<T>(this T obj, Func<T, bool> predicate) =>
             obj.When(predicate(obj));
