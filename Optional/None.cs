@@ -23,13 +23,13 @@ namespace CodingHelmet.Optional
 
         public override int GetHashCode() => 0;
 
-        public bool Equals(None<T> other) => true;
+        public bool Equals(None<T> other) =>
+            other?.GetType() == typeof(None<T>);
 
         public bool Equals(None other) => true;
 
         public static bool operator ==(None<T> a, None<T> b) =>
-            (a is null && b is null) ||
-            (!(a is null) && a.Equals(b));
+            a?.Equals(b) ?? b is null;
 
         public static bool operator !=(None<T> a, None<T> b) => !(a == b);
 

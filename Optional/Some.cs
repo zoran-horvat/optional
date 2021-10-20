@@ -40,28 +40,18 @@ namespace CodingHelmet.Optional
         private string ContentToString =>
             this.Content?.ToString() ?? "<null>";
 
-        public bool Equals(Some<T> other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return EqualityComparer<T>.Default.Equals(Content, other.Content);
-        }
+        public bool Equals(Some<T> other) =>
+            other?.GetType() == typeof(Some<T>) && 
+            EqualityComparer<T>.Default.Equals(Content, other.Content);
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj is Some<T> && Equals((Some<T>) obj);
-        }
+        public override bool Equals(object obj) =>
+            this.Equals(obj as Some<T>);
 
-        public override int GetHashCode()
-        {
-            return EqualityComparer<T>.Default.GetHashCode(Content);
-        }
+        public override int GetHashCode() =>
+            this.Content?.GetHashCode() ?? 0;
 
         public static bool operator ==(Some<T> a, Some<T> b) =>
-            (a is null && b is null) ||
-            (!(a is null) && a.Equals(b));
+            a?.Equals(b) ?? b is null;
 
         public static bool operator !=(Some<T> a, Some<T> b) => !(a == b);
     }
